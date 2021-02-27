@@ -49,11 +49,9 @@ class ShoppingCart
   end
 
   def product_breakdown
-    breakdown = {}
-    @products.each do |product|
-      breakdown[product.category] = products_by_category(product.category)
+    @products.group_by do |product|
+      product.category
     end
-    breakdown
   end
 
 end
