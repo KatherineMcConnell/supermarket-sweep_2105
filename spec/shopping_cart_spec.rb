@@ -1,138 +1,125 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require 'rspec'
 require './lib/product'
-require'./lib/shopping_cart'
+require './lib/shopping_cart'
 
-class ShoppingCartTest < Minitest::Test
-
-  def test_it_exists_and_has_attributes
+RSpec.describe ShoppingCart do
+#Iteration 2
+  it 'exists' do
     cart = ShoppingCart.new("King Soopers", "30items")
 
-    assert_instance_of ShoppingCart, cart
-    assert_equal 'King Soopers', cart.name
-    assert_equal 30, cart.capacity
-    assert_equal [], cart.products
+    expect(cart).to be_an_instance_of(ShoppingCart)
   end
 
-  def test_it_has_add_product
-    cart = ShoppingCart.new("King Soopers", "30items")
-    product1 = Product.new(:paper, 'toilet paper', 3.70, '10')
-    product2 = Product.new(:meat, 'chicken', 4.50, '2')
-
-    cart.add_product(product1)
-    cart.add_product(product2)
-
-    assert_equal [product1, product2], cart.products
-  end
-
-  def test_it_has_details
-    # skip
+  it 'has attributes' do
     cart = ShoppingCart.new("King Soopers", "30items")
 
-    expected = {
-                name: "King Soopers",
-                capacity: 30
-              }
-
-
-    assert_equal expected, cart.details
+  expect(cart.name).to eq('King Soopers')
+  expect(cart.capacity).to eq(30)
+  expect(cart.products).to eq([])
   end
 
-  def test_it_has_total_number_of_products
-    # skip
+  it 'can add products' do
     cart = ShoppingCart.new("King Soopers", "30items")
     product1 = Product.new(:paper, 'toilet paper', 3.70, '10')
     product2 = Product.new(:meat, 'chicken', 4.50, '2')
-    product3 = Product.new(:paper, 'tissue paper', 1.25, '1')
-
     cart.add_product(product1)
     cart.add_product(product2)
-    cart.add_product(product3)
 
-    assert_equal 13, cart.total_number_of_products
+    expect(cart.products).to eq([product1,product2])
   end
 
-  def test_is_full?
-    # skip
+  it 'can give details of cart' do
+    cart = ShoppingCart.new("King Soopers", "30items")
+    product1 = Product.new(:paper, 'toilet paper', 3.70, '10')
+    product2 = Product.new(:meat, 'chicken', 4.50, '2')
+    cart.add_product(product1)
+    cart.add_product(product2)
+
+    expect(cart.details).to eq({name: "King Soopers", capacity: 30})
+  end
+#Iteration 3
+  it 'can calculate total_number_of_products' do
     cart = ShoppingCart.new("King Soopers", "30items")
     product1 = Product.new(:paper, 'toilet paper', 3.70, '10')
     product2 = Product.new(:meat, 'chicken', 4.50, '2')
     product3 = Product.new(:paper, 'tissue paper', 1.25, '1')
-
     cart.add_product(product1)
     cart.add_product(product2)
     cart.add_product(product3)
 
-    assert_equal false, cart.is_full?
+    expect(cart.total_number_of_products).to eq(13)
+  end
+
+  it 'can calculate whether or not it is full' do
+    cart = ShoppingCart.new("King Soopers", "30items")
+    product1 = Product.new(:paper, 'toilet paper', 3.70, '10')
+    product2 = Product.new(:meat, 'chicken', 4.50, '2')
+    product3 = Product.new(:paper, 'tissue paper', 1.25, '1')
+    cart.add_product(product1)
+    cart.add_product(product2)
+    cart.add_product(product3)
+
+
+    expect(cart.is_full?).to eq(true)
     product4 = Product.new(:produce, 'apples', 0.99, '20')
     cart.add_product(product4)
-    assert_equal true, cart.is_full?
+    cart.is_full?
   end
 
-  def test_it_has_products_by_category
-    # skip
+  it 'can return array of products by category' do
     cart = ShoppingCart.new("King Soopers", "30items")
     product1 = Product.new(:paper, 'toilet paper', 3.70, '10')
     product2 = Product.new(:meat, 'chicken', 4.50, '2')
     product3 = Product.new(:paper, 'tissue paper', 1.25, '1')
+    cart.add_product(product1)
+    cart.add_product(product2)
+    cart.add_product(product3)
     product4 = Product.new(:produce, 'apples', 0.99, '20')
-
     cart.add_product(product4)
-    cart.add_product(product1)
-    cart.add_product(product2)
-    cart.add_product(product3)
 
-    assert_equal [product1, product3], cart.products_by_category(:paper)
+    expect(cart.products_by_category(:paper)).to eq([product1,product3])
   end
 
-  def test_it_has_percentage_occupied
-    # skip
+  it 'can calculate percentage_occupied ' do
     cart = ShoppingCart.new("King Soopers", "30items")
     product1 = Product.new(:paper, 'toilet paper', 3.70, '10')
     product2 = Product.new(:meat, 'chicken', 4.50, '2')
     product3 = Product.new(:paper, 'tissue paper', 1.25, '1')
-
     cart.add_product(product1)
     cart.add_product(product2)
     cart.add_product(product3)
 
-    assert_equal 43.33, cart.percentage_occupied
+    expect(cart.percentage_occupied).to eq(43.33)
   end
 
-  def test_sorted_products_by_quantity
-    # skip
+  it 'can sort products_by_quantity' do
     cart = ShoppingCart.new("King Soopers", "30items")
     product1 = Product.new(:paper, 'toilet paper', 3.70, '10')
     product2 = Product.new(:meat, 'chicken', 4.50, '2')
     product3 = Product.new(:paper, 'tissue paper', 1.25, '1')
     product4 = Product.new(:produce, 'apples', 0.99, '20')
-
     cart.add_product(product1)
     cart.add_product(product2)
     cart.add_product(product3)
     cart.add_product(product4)
 
-    expected = [product4, product1, product2, product3]
-    assert_equal expected, cart.sorted_products_by_quantity
+    expect(cart.sorted_products_by_quantity).to eq([product4,product1,product2,product3])
   end
 
-  def test_product_breakdown
+  it 'can give a product breakdown hash with categories as keys' do
     cart = ShoppingCart.new("King Soopers", "30items")
     product1 = Product.new(:paper, 'toilet paper', 3.70, '10')
     product2 = Product.new(:meat, 'chicken', 4.50, '2')
     product3 = Product.new(:paper, 'tissue paper', 1.25, '1')
     product4 = Product.new(:produce, 'apples', 0.99, '20')
-
     cart.add_product(product1)
     cart.add_product(product2)
     cart.add_product(product3)
     cart.add_product(product4)
 
-    expected = {
-                :meat => [product2],
-                  :paper => [product1, product3],
-                  :produce => [product4]
-                }
-    assert_equal expected, cart.product_breakdown
+    expect(cart.product_breakdown).to eq({:meat=> [product2],
+        :paper=> [product1,product3],
+        :produce=> [product4]})
   end
+
 end
